@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة المدير | عالم القصص</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <link rel="stylesheet" href="css/manager.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="sidebar">
+    <h2>عالم القصص</h2>
+
+    <a class="active"><i class='bx bx-home'></i> الرئيسية</a>
+    <a class="logout" href="#" onclick="logout()">
+      <i class='bx bx-log-out'></i> تسجيل خروج
+    </a>
+  </aside>
+
+  <main class="main">
+
+    <h1>لوحة المدير</h1>
+
+    <div class="cards">
+
+      <div class="card teacher-card">
+        <h3>إضافة معلم</h3>
+
+        <input type="text" id="teacherName" placeholder="اسم المعلم">
+        <input type="email" id="teacherEmail" placeholder="بريد المعلم">
+        <input type="text" id="teacherPhone" placeholder="رقم هاتف المعلم">
+        <input type="password" id="teacherPassword" placeholder="كلمة المرور">
+
+        <button onclick="addTeacher()">إضافة معلم +</button>
+      </div>
+
+      <div class="card story-card">
+        <h3>إضافة قصة</h3>
+
+        <input type="text" id="storyTitle" placeholder="عنوان القصة">
+
+        <select id="storyCategory">
+          <option value="">اختر تصنيف القصة</option>
+          <option value="islamic">قصص إسلامية</option>
+          <option value="fantasy">قصص خيالية</option>
+          <option value="adventure">قصص مغامرات</option>
+          <option value="educational">قصص تعليمية</option>
+          <option value="animals">قصص حيوانات</option>
+        </select>
+
+        <textarea id="storyText" placeholder="نص القصة"></textarea>
+        <input type="file" id="storyImage" accept="image/*">
+
+        <div class="quiz-creation-box" style="margin-top: 15px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+          <h4 style="margin: 0 0 10px 0; color: #1e293b;">إضافة أسئلة الاختبار للقصة (اختياري) 📝</h4>
+          
+          <div class="question-block" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 10px; text-align: right;">
+            <strong style="font-size: 13px; color: #475569;">السؤال الأول:</strong>
+            <input type="text" id="quizQ1" placeholder="نص السؤال الأول" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <input type="text" id="quizQ1Opt1" placeholder="الخيار الأول" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <input type="text" id="quizQ1Opt2" placeholder="الخيار الثاني" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <input type="text" id="quizQ1Opt3" placeholder="الخيار الثالث" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <select id="quizQ1Answer" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+              <option value="0">الخيار الأول هو الصحيح</option>
+              <option value="1">الخيار الثاني هو الصحيح</option>
+              <option value="2">الخيار الثالث هو الصحيح</option>
+            </select>
+          </div>
+
+          <div class="question-block" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 10px; text-align: right;">
+            <strong style="font-size: 13px; color: #475569;">السؤال الثاني:</strong>
+            <input type="text" id="quizQ2" placeholder="نص السؤال الثاني" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <input type="text" id="quizQ2Opt1" placeholder="الخيار الأول" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <input type="text" id="quizQ2Opt2" placeholder="الخيار الثاني" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <input type="text" id="quizQ2Opt3" placeholder="الخيار الثالث" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <select id="quizQ2Answer" style="width: 100%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1;">
+              <option value="0">الخيار الأول هو الصحيح</option>
+              <option value="1">الخيار الثاني هو الصحيح</option>
+              <option value="2">الخيار الثالث هو الصحيح</option>
+            </select>
+          </div>
+        </div>
+
+        <button onclick="addStory()">إضافة قصة +</button>
+      </div>
+
+    </div>
+
+    <section class="box">
+      <h3>المعلمون</h3>
+      <div id="teachersList">لا يوجد معلمون حالياً</div>
+    </section>
+
+    <section class="box">
+      <h3>القصص المضافة</h3>
+      <div id="storiesList">لا توجد قصص مضافة حالياً</div>
+    </section>
+
+  </main>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/manager.js?v=3"></script>
+
+
+</body>
+</html>

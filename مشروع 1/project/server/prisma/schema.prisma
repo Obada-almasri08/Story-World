@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int          @id @default(autoincrement())
+  name          String
+  email         String       @unique
+  password      String
+  passwordPlain String?      // to store plain passwords for students/teachers
+  phone         String?      // phone number field
+  role          String       // 'manager', 'teacher', 'student'
+  grade         Int?         // for students
+  teacherId     Int?         // for students (references a teacher)
+  teacher       User?        @relation("TeacherStudents", fields: [teacherId], references: [id])
+  students      User[]       @relation("TeacherStudents")
+  submissions   Submission[]
+  favorites     Favorite[]
+  progress      Progress[]
+  createdAt     DateTime     @default(now())
+}
+
+model Story {
+  id          Int          @id @default(autoincrement())
+  title       String
+  category    String
+  text        String
+  imagePath   String?
+  isDefault   Boolean      @default(false)
+  quizText    String?      // Stores JSON string of quiz questions
+  submissions Submission[]
+  favorites   Favorite[]
+  progress    Progress[]
+  createdAt   DateTime     @default(now())
+}
+
+model Submission {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  storyId   Int
+  audioPath String
+  status    String   @default("بانتظار التقييم") // "بانتظار التقييم", "تم التقييم"
+  rating    String?
+  note      String?
+  isRead    Boolean  @default(false)
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  storyId Int
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story   Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storyId])
+}
+
+model Progress {
+  id         Int   @id @default(autoincrement())
+  userId     Int
+  storyId    Int
+  percentage Int   @default(0)
+  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story      Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storyId])
+}

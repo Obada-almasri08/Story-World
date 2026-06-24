@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة المعلم | عالم القصص</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="css/admin.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="sidebar">
+    <h2>عالم القصص</h2>
+
+    <a class="active" href="admin.html"><i class='bx bx-home'></i> الرئيسية</a>
+    <a href="teacher-students.html"><i class='bx bx-user'></i> طلابي</a>
+
+    <a class="logout" href="#" onclick="logout()">
+      <i class='bx bx-log-out'></i> تسجيل خروج
+    </a>
+  </aside>
+
+  <main class="main">
+
+    <h1>مرحباً، <span id="teacherName">معلم</span></h1>
+
+    <div class="teacher-stats">
+      <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='teacher-students.html?view=students'">
+        <i class='bx bx-user'></i>
+        <h3 id="studentsCount">0</h3>
+        <p>عدد طلابي</p>
+      </div>
+
+      <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='teacher-students.html?view=pending'">
+        <i class='bx bx-time-five'></i>
+        <h3 id="pendingCount">0</h3>
+        <p>بانتظار التقييم</p>
+      </div>
+
+      <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='teacher-students.html?view=reviewed'">
+        <i class='bx bx-check-circle'></i>
+        <h3 id="reviewedCount">0</h3>
+        <p>تم تقييمها</p>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>إضافة طالب</h3>
+
+        <input type="text" id="studentName" placeholder="اسم الطالب">
+        <input type="email" id="studentEmail" placeholder="البريد الإلكتروني">
+        <input type="password" id="studentPassword" placeholder="كلمة المرور">
+
+        <select id="studentGrade">
+          <option value="">اختر الصف</option>
+          <option value="1">الصف الأول</option>
+          <option value="2">الصف الثاني</option>
+          <option value="3">الصف الثالث</option>
+          <option value="4">الصف الرابع</option>
+          <option value="5">الصف الخامس</option>
+          <option value="6">الصف السادس</option>
+          <option value="7">الصف السابع</option>
+          <option value="8">الصف الثامن</option>
+        </select>
+
+        <button onclick="addStudent()">إضافة طالب +</button>
+      </div>
+    </div>
+
+    <div class="students">
+      <div class="section-title">
+        <h3>إدارة الطلاب والتسجيلات</h3>
+        <a class="refresh-btn" href="teacher-students.html">فتح صفحة طلابي</a>
+      </div>
+
+      <div id="studentsList">افتح صفحة طلابي لعرض الطلاب حسب الصفوف وتقييم التسجيلات.</div>
+    </div>
+
+  </main>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/admin.js?v=9"></script>
+
+
+</body>
+</html>

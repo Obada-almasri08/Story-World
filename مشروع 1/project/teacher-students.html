@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>طلابي | عالم القصص</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="css/admin.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="sidebar">
+    <h2>عالم القصص</h2>
+
+    <a href="admin.html"><i class='bx bx-home'></i> الرئيسية</a>
+    <a class="active" href="teacher-students.html"><i class='bx bx-user'></i> طلابي</a>
+
+    <a class="logout" href="#" onclick="logout()">
+      <i class='bx bx-log-out'></i> تسجيل خروج
+    </a>
+  </aside>
+
+  <main class="main">
+
+    <h1>طلابي</h1>
+
+    <div class="students">
+      <h3>اختر الصف</h3>
+
+      <div class="grades-grid">
+        <button onclick="showGradeStudents('1')">الصف الأول</button>
+        <button onclick="showGradeStudents('2')">الصف الثاني</button>
+        <button onclick="showGradeStudents('3')">الصف الثالث</button>
+        <button onclick="showGradeStudents('4')">الصف الرابع</button>
+        <button onclick="showGradeStudents('5')">الصف الخامس</button>
+        <button onclick="showGradeStudents('6')">الصف السادس</button>
+        <button onclick="showGradeStudents('7')">الصف السابع</button>
+        <button onclick="showGradeStudents('8')">الصف الثامن</button>
+      </div>
+
+      <div id="studentsList">اختر صفاً لعرض الطلاب</div>
+    </div>
+
+    <div class="students submissions-box">
+      <div class="section-title">
+        <h3 id="selectedStudentTitle">تسجيلات الطالب</h3>
+        <button onclick="refreshSubmissions()" class="refresh-btn">تحديث التسجيلات</button>
+      </div>
+
+      <div id="submissionsList">اختر طالباً لعرض تسجيلاته</div>
+    </div>
+
+  </main>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/teacher-students.js"></script>
+
+
+</body>
+</html>
