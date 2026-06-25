@@ -18,12 +18,17 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'البريد الإلكتروني غير صحيح' });
     }
 
-    // Manager uses the 'teacher' role button on frontend, but backend knows them as 'manager'
-    if (role === 'student' && user.role !== 'student') {
-        return res.status(401).json({ error: 'البريد الإلكتروني غير صحيح كطالب' });
-    }
-    if (role === 'teacher' && user.role === 'student') {
-        return res.status(401).json({ error: 'البريد الإلكتروني غير صحيح كمعلم' });
+    // السماح للـ manager بالدخول من بوابة الـ teacher أو أي بوابة أخرى
+    if (user.role === 'manager') {
+       // سيسمح له بالمرور للخطوة التالية مباشرة
+    } else {
+        // التحقق العادي للطلاب والمعلمين
+        if (role === 'student' && user.role !== 'student') {
+          return res.status(401).json({ error: 'البريد الإلكتروني غير صحيح كطالب' });
+        }
+        if (role === 'teacher' && user.role === 'student') {
+            return res.status(401).json({ error: 'البريد الإلكتروني غير صحيح كمعلم' });
+        }
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
