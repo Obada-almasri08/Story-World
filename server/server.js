@@ -14,6 +14,9 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// 1. تشغيل ملفات الفرونت إند الثابتة (css, js, images) من المجلد الرئيسي للمشروع
+app.use(express.static(path.join(__dirname, '../')));
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
@@ -22,20 +25,17 @@ app.use('/api/submissions', require('./routes/submissions'));
 app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/progress', require('./routes/progress'));
 
-// 1. تشغيل الملفات الثابتة من مجلد dist الجديد
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// 2. توجيه الصفحة الرئيسية لتعرض ملف home.html مباشرة
+// 2. توجيه الصفحة الرئيسية لتعرض ملف index.html مباشرة من المجلد الرئيسي
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'home.html'));
+  res.sendFile(path.join(__dirname, '../', 'index.html'));
 });
 
-// توجيه أي مسار آخر غير معروف للفرونت إند
+// توجيه أي مسار آخر غير معروف للفرونت إند لمنع رسائل Cannot GET
 app.get('*', (req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(404).json({ status: "error", message: "API endpoint not found" });
   }
-  res.sendFile(path.join(__dirname, 'dist', 'home.html'));
+  res.sendFile(path.join(__dirname, '../', 'index.html'));
 });
 
 app.listen(PORT, () => {
