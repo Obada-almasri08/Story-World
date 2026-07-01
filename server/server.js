@@ -25,6 +25,13 @@ app.use('/api/submissions', require('./routes/submissions'));
 app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/progress', require('./routes/progress'));
 
+// الصفحة الرئيسية الافتراضية للـ API لتجنب رسالة Cannot GET /
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to Tawheed Reader API Server! The backend is running perfectly."
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
