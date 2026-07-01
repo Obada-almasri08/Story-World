@@ -1,0 +1,184 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: #f7fbff;
+  color: #17233c;
+}
+
+.page {
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 210px;
+  height: 100vh;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 0 0 0 28px;
+  padding: 24px 18px;
+  box-shadow: -12px 0 40px rgba(15, 23, 42, 0.08);
+  overflow-y: auto;
+}
+
+.logo-box {
+  text-align: center;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.logo-box img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+}
+
+.logo-box h2 {
+  margin: 8px 0 0;
+  font-size: 23px;
+  color: #0f2d5c;
+}
+
+.menu {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.menu a {
+  height: 52px;
+  padding: 0 15px;
+  border-radius: 16px;
+  color: #334155;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 17px;
+  font-weight: 700;
+  transition: 0.25s;
+}
+
+.menu a i {
+  font-size: 23px;
+}
+
+.menu a:hover,
+.menu a.active {
+  background: #eaf3ff;
+  color: #2563eb;
+}
+
+.menu .logout {
+  margin-top: 18px;
+  color: #ef4444;
+}
+
+/* Main */
+.main {
+  padding: 30px;
+  margin-right: 210px;
+}
+
+.page-title h1 {
+  margin: 0;
+  color: #0f2d5c;
+}
+
+.page-title p {
+  margin: 10px 0 20px;
+  color: #64748b;
+}
+
+/* Messages */
+.messages-list {
+  display: grid;
+  gap: 20px;
+}
+
+.message-card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  border: 1px solid #e6ecf5;
+}
+
+.message-card h3 {
+  margin: 0 0 10px;
+  color: #2563eb;
+}
+
+.message-card .story {
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.message-card .rating {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.message-card .rating.ممتاز {
+  color: #15803d;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+}
+
+.message-card .rating.جيدجداً {
+  color: #1d4ed8;
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+}
+
+.message-card .rating.جيد {
+  color: #b45309;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+}
+
+.message-card .rating.يحتاجتدريب {
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.message-card .note {
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 14px;
+  color: #334155;
+  border-right: 4px solid #3b82f6;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+  }
+  .main {
+    margin-right: 0;
+  }
+}

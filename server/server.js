@@ -14,9 +14,6 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve the frontend static files
-app.use(express.static(path.join(__dirname, '../')));
-
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
@@ -25,12 +22,20 @@ app.use('/api/submissions', require('./routes/submissions'));
 app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/progress', require('./routes/progress'));
 
-// الصفحة الرئيسية الافتراضية للـ API لتجنب رسالة Cannot GET /
+// 1. تشغيل الملفات الثابتة من مجلد dist الجديد
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// 2. توجيه الصفحة الرئيسية لتعرض ملف home.html مباشرة
 app.get('/', (req, res) => {
-  res.status(200).json({
-    status: "success",
-    message: "Welcome to Tawheed Reader API Server! The backend is running perfectly."
-  });
+  res.sendFile(path.join(__dirname, 'dist', 'home.html'));
+});
+
+// توجيه أي مسار آخر غير معروف للفرونت إند
+app.get('*', (req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(404).json({ status: "error", message: "API endpoint not found" });
+  }
+  res.sendFile(path.join(__dirname, 'dist', 'home.html'));
 });
 
 app.listen(PORT, () => {

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الرئيسية | عالم القصص</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="sidebar">
+    <div class="logo-box">
+      <img src="images/logo.png" alt="عالم القصص">
+      <h2>عالم القصص</h2>
+    </div>
+
+    <nav class="menu">
+      <a class="active" href="home.html"><i class='bx bx-home'></i><span>الرئيسية</span></a>
+      <a href="stories.html"><i class='bx bx-book-open'></i><span>القصص</span></a>
+      <a href="favorites.html"><i class='bx bx-heart'></i><span>المفضلة</span></a>
+      <a href="achievements.html"><i class='bx bx-trophy'></i><span>إنجازاتي</span></a>
+      <a href="messages.html" class="messages-link">
+        <i class='bx bx-envelope'></i>
+        <span>رسائلي</span>
+        <span id="msgCount" class="msg-badge">0</span>
+      </a>
+      <a class="logout" href="#" onclick="logout()"><i class='bx bx-log-out'></i><span>تسجيل خروج</span></a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <header class="top">
+      <div class="notify-box">
+        <button class="notify" onclick="toggleUpdates()">
+          <i class='bx bx-bell'></i>
+          <span id="updatesCount" class="msg-badge">0</span>
+        </button>
+
+        <div id="updatesPanel" class="updates-panel">
+          <h3>آخر المستجدات</h3>
+          <div id="updatesList">لا توجد مستجدات حالياً</div>
+        </div>
+      </div>
+
+      <div class="student">
+        <div>
+          <h3>مرحباً بك، <span id="studentName">طالب</span></h3>
+          <p>طالب مميز</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-text">
+        <h1>أهلاً بك في<br>عالم القصص</h1>
+        <p>اكتشف، اقرأ، وتعلم من أجمل القصص<br>رحلة ممتعة تنتظرك كل يوم.</p>
+        <a href="stories.html" class="hero-btn">استكشف القصص</a>
+      </div>
+
+      <img src="images/bg.jpg" alt="hero">
+    </section>
+
+    <section class="quick-cards">
+
+      <div class="quick-card blue">
+        <div class="quick-icon"><i class='bx bx-book-open'></i></div>
+        <div>
+          <h3>القصص</h3>
+          <p>استكشف مكتبة القصص الممتعة</p>
+        </div>
+        <a href="stories.html"><i class='bx bx-left-arrow-alt'></i></a>
+      </div>
+
+      <div class="quick-card green">
+        <div class="quick-icon"><i class='bx bx-heart'></i></div>
+        <div>
+          <h3>المفضلة</h3>
+          <p>القصص التي أضفتها للمفضلة</p>
+        </div>
+        <a href="favorites.html"><i class='bx bx-left-arrow-alt'></i></a>
+      </div>
+
+      <div class="quick-card purple">
+        <div class="quick-icon"><i class='bx bx-trophy'></i></div>
+        <div>
+          <h3>إنجازاتي</h3>
+          <p>تتبع تقدمك واحصل على الجوائز</p>
+        </div>
+        <a href="achievements.html"><i class='bx bx-left-arrow-alt'></i></a>
+      </div>
+
+      <div class="quick-card yellow">
+        <div class="quick-icon"><i class='bx bx-message-dots'></i></div>
+        <div>
+          <h3>رسائل المعلم</h3>
+          <p>تواصل مع معلمك واستلم رسائلك</p>
+        </div>
+        <a href="messages.html"><i class='bx bx-left-arrow-alt'></i></a>
+      </div>
+
+    </section>
+
+    <section class="bottom-area">
+
+      <div class="continue-box">
+        <div class="section-head">
+          <h3>آخر القصص المقروءة</h3>
+          <i class='bx bx-book-reader'></i>
+        </div>
+
+        <div id="recentStoriesList" class="story-list"></div>
+      </div>
+
+      <div class="achievement-box">
+        <h3>إنجازاتك</h3>
+        <div class="medal">
+          <i class='bx bx-medal'></i>
+        </div>
+        <h4>قارئ مميز</h4>
+        <p>أكملت <span id="completedStories">0</span> قصة</p>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="js/api.js"></script>
+<script>
+const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+if (!currentUser || currentUser.role !== "student") {
+  window.location.href = "index.html";
+}
+
+document.getElementById("studentName").textContent = currentUser.name || "طالب";
+
+function openStoryFromHome(storyId) {
+  sessionStorage.setItem("currentStoryId", storyId);
+  window.location.href = "story.html";
+}
+
+async function renderRecentStories() {
+  const container = document.getElementById("recentStoriesList");
+  
+  try {
+    const stories = await fetchApi('/stories');
+    const progresses = await fetchApi('/progress');
+
+    // Filter and sort stories by progress ID descending (recently interacted)
+    let recentStories = [];
+    if (progresses && progresses.length > 0) {
+      const sortedProgresses = [...progresses]
+        .filter(p => p.percentage > 0)
+        .sort((a, b) => b.id - a.id);
+        
+      recentStories = sortedProgresses
+        .map(p => stories.find(s => s.id === p.storyId))
+        .filter(Boolean)
+        .slice(0, 4);
+    }
+
+    if (recentStories.length === 0) {
+      recentStories = stories.slice(0, 4);
+    }
+
+    container.innerHTML = "";
+
+    recentStories.forEach(story => {
+      const myProgress = progresses.find(p => p.storyId === story.id);
+      const progress = myProgress ? myProgress.percentage : 0;
+
+      const card = document.createElement("div");
+      card.className = "story-card";
+      card.onclick = function () {
+        openStoryFromHome(story.id);
+      };
+
+      let imageUrl = `images/story1.jpg`;
+      if (story.imagePath) {
+        if (story.imagePath.startsWith('/images')) {
+          imageUrl = `.${story.imagePath}`;
+        } else {
+          imageUrl = `http://localhost:3000${story.imagePath}`;
+        }
+      }
+
+      card.innerHTML = `
+        <img src="${imageUrl}" alt="" onerror="this.src='images/story1.jpg'">
+        <h4>${story.title}</h4>
+        <div class="progress">
+          <span style="width:${progress}%"></span>
+        </div>
+        <strong>${progress}%</strong>
+      `;
+
+      container.appendChild(card);
+    });
+
+    // Update completed stories
+    const completedCount = progresses.filter(p => p.percentage === 100).length;
+    document.getElementById("completedStories").textContent = completedCount;
+
+  } catch (error) {
+    container.innerHTML = "حدث خطأ في تحميل القصص";
+  }
+}
+
+async function updateMessagesCount() {
+  try {
+    const submissions = await fetchApi('/submissions');
+    
+    // Count submissions that have a rating and are not read
+    const myMessages = submissions.filter(sub => sub.rating && !sub.isRead);
+
+    const badge = document.getElementById("msgCount");
+    if (!badge) return;
+
+    if (myMessages.length > 0) {
+      badge.style.display = "inline-block";
+      badge.textContent = myMessages.length;
+    } else {
+      badge.style.display = "none";
+    }
+  } catch (error) {}
+}
+
+async function updateUpdatesCount() {
+  try {
+    const stories = await fetchApi('/stories');
+    const submissions = await fetchApi('/submissions');
+
+    const seenKey = `updatesSeen_${currentUser.email}`;
+    const lastSeen = Number(localStorage.getItem(seenKey)) || 0;
+
+    const newStories = stories
+      .filter(story => new Date(story.createdAt).getTime() > lastSeen)
+      .map(story => ({
+        type: "story",
+        storyId: story.id,
+        text: `تمت إضافة قصة جديدة: ${story.title}`
+      }));
+
+    const newRatings = submissions
+      .filter(sub => sub.rating && !sub.isRead)
+      .map(sub => ({
+        type: "rating",
+        storyId: sub.storyId,
+        text: `وصل تقييم جديد لقصة: ${sub.story ? sub.story.title : 'قصة محذوفة'}`
+      }));
+
+    const updates = [...newStories, ...newRatings];
+    window.currentUpdates = updates;
+
+    const badge = document.getElementById("updatesCount");
+    if (updates.length > 0) {
+      badge.style.display = "inline-block";
+      badge.textContent = updates.length;
+    } else {
+      badge.style.display = "none";
+    }
+  } catch (error) {}
+}
+
+function renderUpdatesPanel() {
+  const updates = window.currentUpdates || [];
+  const list = document.getElementById("updatesList");
+
+  if (updates.length === 0) {
+    list.innerHTML = "لا توجد مستجدات حالياً";
+    return;
+  }
+
+  list.innerHTML = "";
+
+  updates.forEach(update => {
+    const item = document.createElement("div");
+    item.className = "update-item";
+    item.style.cursor = "pointer";
+    item.style.padding = "10px";
+    item.style.borderBottom = "1px solid #edf2f7";
+    item.style.transition = "background 0.2s";
+    
+    item.onmouseenter = () => { item.style.background = "#f1f5ff"; };
+    item.onmouseleave = () => { item.style.background = "transparent"; };
+
+    item.textContent = update.text;
+    
+    item.onclick = () => {
+      if (update.type === "story") {
+        openStoryFromHome(update.storyId);
+      } else if (update.type === "rating") {
+        window.location.href = "messages.html";
+      }
+    };
+    
+    list.appendChild(item);
+  });
+}
+
+function toggleUpdates() {
+  const panel = document.getElementById("updatesPanel");
+  panel.classList.toggle("show");
+
+  renderUpdatesPanel();
+
+  if (panel.classList.contains("show")) {
+    localStorage.setItem(`updatesSeen_${currentUser.email}`, Date.now());
+
+    setTimeout(updateUpdatesCount, 300);
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("currentUser");
+  window.location.href = "index.html";
+}
+
+renderRecentStories();
+updateMessagesCount();
+updateUpdatesCount();
+
+setInterval(updateMessagesCount, 5000);
+setInterval(updateUpdatesCount, 5000);
+</script>
+
+</body>
+</html>
