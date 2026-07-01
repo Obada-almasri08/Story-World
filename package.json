@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "build": "echo 'No build needed for static frontend'"
+    "build": "echo 'No build needed'"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
