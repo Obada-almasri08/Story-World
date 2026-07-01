@@ -2,7 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
+const { execSync } = require('child_process');
+
+// Run prisma db push on startup (works on production using localhost:3000 DB)
+try {
+  console.log('Running database schema push...');
+  execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' });
+  console.log('Database schema pushed successfully.');
+} catch (error) {
+  console.error('Failed to push database schema:', error);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes (تأكد أن الـ APIs دائماً في البداية)
+// Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/stories', require('./routes/stories'));
@@ -23,30 +32,20 @@ app.use('/api/submissions', require('./routes/submissions'));
 app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/progress', require('./routes/progress'));
 
-// مسار المجلد الثابت للفرونت إند داخل السيرفر
-const distPath = path.join(__dirname, 'dist');
+// 1. تشغيل الملفات الثابتة من مجلد dist الجديد
+app.use(express.static(path.join(__dirname, 'dist')));
 
-// تشغيل ملفات الفرونت إند الثابتة في حال وجودها
-if (fs.existsSync(distPath)) {
-  app.use(express.static(distPath));
-}
+// 2. توجيه الصفحة الرئيسية لتعرض ملف home.html مباشرة
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'home.html'));
+});
 
-// توجيه أي مسار آخر غير الـ API لخدمة الفرونت إند
+// توجيه أي مسار آخر غير معروف للفرونت إند
 app.get('*', (req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(404).json({ status: "error", message: "API endpoint not found" });
   }
-  
-  // إذا كان ملف index.html موجوداً أرسله، وإلا أرسل الرسالة الاحتياطية بدون كراش
-  const indexPath = path.join(distPath, 'index.html');
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.status(200).json({
-      status: "success",
-      message: "Server is live! Please ensure frontend files are completely uploaded inside 'server/dist'."
-    });
-  }
+  res.sendFile(path.join(__dirname, 'dist', 'home.html'));
 });
 
 app.listen(PORT, () => {
