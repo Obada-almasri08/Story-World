@@ -237,7 +237,7 @@ function createSubmissionRow(submission) {
     row.classList.add("reviewed-row");
   }
 
-  const audioUrl = `http://localhost:3000${submission.audioPath}`;
+  const audioUrl = `${window.BACKEND_URL || 'http://localhost:3000'}${submission.audioPath}`;
 
   // If it's reviewed, we show the header, and optionally the details below it when expanded
   if (submission.status === "تم التقييم") {

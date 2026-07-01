@@ -1,8 +1,10 @@
-const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? 'http://localhost:3000/api'
-  : (window.location.origin.includes('netlify.app')
-      ? 'http://localhost:3000/api' // Fallback for Netlify previews
-      : window.location.origin + '/api');
+const BACKEND_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:3000'
+  : 'https://tawheedreader.com';
+
+window.BACKEND_URL = BACKEND_URL;
+
+const API_BASE_URL = `${BACKEND_URL}/api`;
 
 // Helper function for API calls
 async function fetchApi(endpoint, options = {}) {

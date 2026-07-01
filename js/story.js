@@ -42,7 +42,7 @@ async function fetchStoryAndStatus() {
       if (story.imagePath.startsWith('/images')) {
         imageUrl = `.${story.imagePath}`;
       } else {
-        imageUrl = `http://localhost:3000${story.imagePath}`;
+        imageUrl = `${window.BACKEND_URL || 'http://localhost:3000'}${story.imagePath}`;
       }
     }
     document.getElementById("storyImage").src = imageUrl;
