@@ -26,24 +26,28 @@ app.use('/api/progress', require('./routes/progress'));
 // مسار المجلد الثابت للفرونت إند داخل السيرفر
 const distPath = path.join(__dirname, 'dist');
 
-// إذا كان مجلد dist موجوداً، قم بتشغيله
+// تشغيل ملفات الفرونت إند الثابتة في حال وجودها
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  app.get('*', (req, res) => {
-    if (req.originalUrl.startsWith('/api')) {
-      return res.status(404).json({ status: "error", message: "API endpoint not found" });
-    }
-    res.sendFile(path.join(distPath, 'index.html'));
-  });
-} else {
-  // حل احتياطي أمان (Fallback) في حال عدم وجود المجلد لمنع خطأ 503 وإبقاء السيرفر حياً
-  app.get('/', (req, res) => {
+}
+
+// توجيه أي مسار آخر غير الـ API لخدمة الفرونت إند
+app.get('*', (req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(404).json({ status: "error", message: "API endpoint not found" });
+  }
+  
+  // إذا كان ملف index.html موجوداً أرسله، وإلا أرسل الرسالة الاحتياطية بدون كراش
+  const indexPath = path.join(distPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
     res.status(200).json({
       status: "success",
-      message: "Tawheed Reader Server is live! Please make sure to put frontend files inside 'server/dist' directory."
+      message: "Server is live! Please ensure frontend files are completely uploaded inside 'server/dist'."
     });
-  });
-}
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
