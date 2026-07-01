@@ -4,7 +4,8 @@
   "description": "Tawheed Reader Platform",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "init": "echo 'Bypassing Hostinger Cache'"
   },
   "dependencies": {
     "cors": "^2.8.5",
