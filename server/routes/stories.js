@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prisma');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
-const prisma = new PrismaClient();
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({

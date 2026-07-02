@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prisma');
 const { authenticateToken, requireRole } = require('../middleware/auth');
-const prisma = new PrismaClient();
 
 // Get all teachers (Manager only)
 router.get('/teachers', authenticateToken, requireRole(['manager']), async (req, res) => {
