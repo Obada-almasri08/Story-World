@@ -3,18 +3,20 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-  const password = await bcrypt.hash('admin123', 10);
+  const password = await bcrypt.hash('Mr@0797488558', 10);
   await prisma.user.upsert({
-    where: { email: 'admin@test.com' },
-    update: {},
+    where: { email: 'hala.ito.jo@gmail.com' },
+    update: {
+      password: password
+    },
     create: {
       name: 'المدير',
-      email: 'admin@test.com',
+      email: 'hala.ito.jo@gmail.com',
       password: password,
       role: 'manager',
     },
   });
-  console.log('Database seeded with admin account.');
+  console.log('Database seeded with custom admin account.');
 }
 
 main()
