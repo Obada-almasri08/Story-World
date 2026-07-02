@@ -4,7 +4,7 @@
   "description": "Tawheed Reader Platform",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "node --v8-pool-size=1 server/server.js",
     "postinstall": "prisma generate --schema=server/prisma/schema.prisma"
   },
   "dependencies": {

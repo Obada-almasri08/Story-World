@@ -1,4 +1,5 @@
 require('dotenv').config();
+process.env.UV_THREADPOOL_SIZE = '1';
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
