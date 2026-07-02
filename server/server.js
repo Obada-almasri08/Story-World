@@ -4,14 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Run prisma db push on startup (works on production using localhost:3000 DB)
-try {
-  console.log('Running database schema push...');
-  execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' });
-  console.log('Database schema pushed successfully.');
-} catch (error) {
-  console.error('Failed to push database schema:', error);
-}
+// Database schema push moved to local deployment workflow to prevent production startup crash
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
